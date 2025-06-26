@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Words & Characters Counter | Blue-Green UI</title>
+<link rel="stylesheet" href="common.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: linear-gradient(135deg, #fafdff 0%, #e8f6ef 100%);
+  color: #1a2a32;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh;
+}
+h1 {
+  margin-top: 110px;
+  text-align: center;
+  font-size: 2.2em;
+  color: #2196f3;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.container {
+  background: linear-gradient(120deg, #e3f6fc 0%, #e8f6ef 100%);
+  border-radius: 18px;
+  padding: 32px;
+  max-width: 800px;
+  width: 90%;
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.10);
+  margin: 24px auto;
+  border: 1px solid #e0f2f1;
+}
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.search-input {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #fafdff;
+  border-radius: 8px;
+  border: 1px solid #b2ebf2;
+  overflow: hidden;
+}
+.search-input input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  color: #1a2a32;
+  outline: none;
+  font-size: 1em;
+}
+.search-controls {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 5px;
+  font-size: 14px;
+  color: #2196f3;
+}
+.search-controls button {
+  background: transparent;
+  border: none;
+  color: #2196f3;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.search-controls button:hover {
+  background: #e3f6fc;
+}
+#textInput {
+  width: 100%;
+  height: 350px;
+  max-height: 600px;
+  overflow-y: auto;
+  background: #fafdff;
+  color: #1a2a32;
+  border: 1px solid #b2ebf2;
+  border-radius: 8px;
+  padding: 15px;
+  resize: vertical;
+  margin-bottom: 18px;
+  white-space: pre-wrap;
+  font-size: 1em;
+}
+.highlight {
+  background-color: #e3f6fc;
+  color: #2196f3;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+.active-highlight {
+  background-color: #43e97b !important;
+  border: 2px solid #2196f3;
+  border-radius: 4px;
+  padding: 0 2px;
+}
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.stat {
+  flex: 1 1 120px;
+  background: #e8f6ef;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #e0f2f1;
+  color: #2196f3;
+}
+.button-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+button {
+  flex: 1 1 45%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.2s;
+  background: #e8f6ef;
+  color: #2196f3;
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(33, 150, 243, 0.07);
+}
+.primary-btn {
+  background: #2196f3;
+  color: #fff;
+}
+.primary-btn:hover {
+  background: #43e97b;
+  color: #fff;
+}
+.unique-download {
+  background: #e8f6ef;
+  color: #2196f3;
+  font-weight: 600;
+  border: 1px solid #b2ebf2;
+}
+.unique-download:hover {
+  background: #e3f6fc;
+}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <img src="images/logo.png" alt="Logo">
+  <a href="index.html">HOME</a>
+  <a href="article.html">ARTICLE</a>
+</div>
+
+<h1>Words & Characters Counter</h1>
+
+<div class="container">
+  <div class="search-bar">
+    <div class="search-input">
+      <input type="text" id="searchText" placeholder="Search text..." oninput="highlightSearch()">
+      <div class="search-controls">
+        <span id="searchStatus">0/0</span>
+        <button onclick="navigateMatch(-1)">▲</button>
+        <button onclick="navigateMatch(1)">▼</button>
+        <button onclick="clearSearch()">X</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="textInput" contenteditable="true" oninput="calculateStats()" style="white-space: pre-wrap;"></div>
+
+  <div class="stats">
+    <div class="stat">Words: <span id="wordCount">0</span></div>
+    <div class="stat">Characters: <span id="charCount">0</span></div>
+    <div class="stat">Spaces: <span id="spaceCount">0</span></div>
+    <div class="stat">Paragraphs: <span id="paraCount">0</span></div>
+    <div class="stat">Emojis: <span id="emojiCount">0</span></div>
+    <div class="stat">Search Matches: <span id="searchCount">0</span></div>
+  </div>
+
+  <div class="button-grid">
+    <button class="primary-btn" onclick="copyText()">Copy Text</button>
+    <button class="unique-download" onclick="downloadText()">Download to File</button>
+    <button class="primary-btn" onclick="resetText()">Try Another</button>
+  </div>
+</div>
+
+<script>
+let currentIndex = 0;
+let highlights = [];
+
+function calculateStats() {
+  let text = document.getElementById('textInput').innerText;
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  const paragraphs = text.split(/\n{2,}/).filter(Boolean);
+  const emojis = text.match(/([\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{1F700}-\u{1F77F}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}])/gu) || [];
+
+  document.getElementById('wordCount').innerText = words.length;
+  document.getElementById('charCount').innerText = text.length;
+  document.getElementById('spaceCount').innerText = (text.match(/\s/g) || []).length;
+  document.getElementById('paraCount').innerText = paragraphs.length;
+  document.getElementById('emojiCount').innerText = emojis.length;
+
+  highlightSearch();
+}
+
+function highlightSearch() {
+  const search = document.getElementById('searchText').value.trim();
+  const textBox = document.getElementById('textInput');
+  const text = textBox.innerText;
+
+  if (search === "") {
+    textBox.innerText = text;
+    document.getElementById('searchCount').innerText = 0;
+    document.getElementById('searchStatus').innerText = `0/0`;
+    highlights = [];
+    return;
+  }
+
+  const regex = new RegExp(search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
+  highlights = [];
+  let count = 0;
+
+  const result = text.replace(regex, (match) => {
+    highlights.push(count);
+    return `<span class="highlight" id="match${count++}">${match}</span>`;
+  });
+
+  textBox.innerHTML = result;
+  document.getElementById('searchCount').innerText = count;
+  document.getElementById('searchStatus').innerText = count ? `1/${count}` : `0/0`;
+
+  if (count > 0) {
+    currentIndex = 0;
+    emphasizeActive();
+    scrollToMatch(currentIndex);
+  }
+}
+
+function navigateMatch(direction) {
+  if (highlights.length === 0) return;
+
+  currentIndex += direction;
+  if (currentIndex < 0) currentIndex = highlights.length - 1;
+  if (currentIndex >= highlights.length) currentIndex = 0;
+
+  emphasizeActive();
+  scrollToMatch(currentIndex);
+}
+
+function emphasizeActive() {
+  document.querySelectorAll('.highlight').forEach(el => el.classList.remove('active-highlight'));
+  const activeEl = document.getElementById(`match${currentIndex}`);
+  if (activeEl) activeEl.classList.add('active-highlight');
+  document.getElementById('searchStatus').innerText = `${currentIndex + 1}/${highlights.length}`;
+}
+
+function scrollToMatch(index) {
+  const el = document.getElementById(`match${index}`);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function clearSearch() {
+  document.getElementById('searchText').value = "";
+  highlightSearch();
+}
+
+function copyText() {
+  const text = document.getElementById('textInput').innerText;
+  navigator.clipboard.writeText(text);
+  alert('Text copied to clipboard!');
+}
+
+function downloadText() {
+  const text = document.getElementById('textInput').innerText;
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "text.txt";
+  link.click();
+}
+
+function resetText() {
+  document.getElementById('textInput').innerText = "";
+  document.getElementById('searchText').value = "";
+  document.getElementById('wordCount').innerText = 0;
+  document.getElementById('charCount').innerText = 0;
+  document.getElementById('spaceCount').innerText = 0;
+  document.getElementById('paraCount').innerText = 0;
+  document.getElementById('emojiCount').innerText = 0;
+  document.getElementById('searchCount').innerText = 0;
+  document.getElementById('searchStatus').innerText = `0/0`;
+  highlights = [];
+  currentIndex = 0;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UUID Generator | Blue-Green UI</title>
+<link rel="stylesheet" href="common.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: linear-gradient(135deg, #fafdff 0%, #e8f6ef 100%);
+  color: #1a2a32;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh;
+}
+h1 {
+  margin-top: 110px;
+  text-align: center;
+  font-size: 2.2em;
+  color: #2196f3;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.container {
+  background: linear-gradient(120deg, #e3f6fc 0%, #e8f6ef 100%);
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.10);
+  width: 90%;
+  max-width: 900px;
+  margin: 24px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border: 1px solid #e0f2f1;
+}
+.form-group {
+  margin-bottom: 18px;
+}
+label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 7px;
+  color: #43e97b;
+}
+input[type="number"],
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #b2ebf2;
+  background: #fafdff;
+  color: #1a2a32;
+  font-size: 1em;
+}
+button {
+  padding: 14px;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  margin-top: 8px;
+  font-size: 16px;
+  transition: 0.2s;
+  width: 100%;
+  background: #e8f6ef;
+  color: #2196f3;
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(33, 150, 243, 0.07);
+}
+.primary-btn {
+  background: #2196f3;
+  color: #fff;
+}
+.primary-btn:hover {
+  background: #43e97b;
+  color: #fff;
+}
+.unique-download {
+  background: #e8f6ef;
+  color: #2196f3;
+  font-weight: 600;
+  border: 1px solid #b2ebf2;
+}
+.unique-download:hover {
+  background: #e3f6fc;
+}
+#uuidBox {
+  margin-top: 18px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  max-height: 600px;
+  min-height: 180px;
+  overflow: auto;
+  color: #1a2a32;
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border: 1px solid #e0f2f1;
+}
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 16px;
+}
+.button-grid button {
+  width: 100%;
+  height: 54px;
+  font-size: 16px;
+  text-align: center;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.info-section {
+  background: linear-gradient(120deg, #e8f6ef 0%, #e3f6fc 100%);
+  border-radius: 14px;
+  padding: 18px;
+  margin: 18px auto;
+  max-width: 900px;
+  width: 90%;
+  color: #2196f3;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.07);
+  border: 1px solid #e0f2f1;
+}
+.info-section h2 {
+  font-size: 1.2em;
+  margin-bottom: 8px;
+  color: #43e97b;
+  font-weight: 600;
+}
+.info-section p {
+  font-size: 1em;
+  line-height: 1.5;
+  color: #1a2a32;
+}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <img src="images/logo.png" alt="Logo">
+  <a href="index.html">HOME</a>
+  <a href="article.html">ARTICLE</a>
+</div>
+
+<h1>Free UUID v4 Generator</h1>
+
+<div class="info-section">
+  <h2>What is UUID?</h2>
+  <p>A UUID (Universally Unique Identifier) is a 128-bit number used to uniquely identify information in computer systems. It ensures that identifiers are globally unique without needing a central authority.</p>
+</div>
+
+<div class="container">
+  <div class="form-group">
+    <label for="count">Number of UUIDs:</label>
+    <input type="number" id="count" min="1" max="1000" value="1">
+  </div>
+
+  <div class="form-group">
+    <label for="encoding">Encoding:</label>
+    <select id="encoding">
+      <option value="none">None</option>
+      <option value="base64">Base64</option>
+      <option value="url">URL Encode</option>
+    </select>
+  </div>
+
+  <div class="button-grid">
+    <button class="primary-btn" onclick="generateUUIDs()">Generate UUIDs</button>
+    <button class="primary-btn" onclick="copyUUIDs()">Copy to Clipboard</button>
+    <button class="unique-download" onclick="downloadUUIDs()">Download to a file</button>
+    <button class="primary-btn" onclick="generateUUIDs()">Generate Another</button>
+  </div>
+
+  <div id="uuidBox">Your generated UUIDs will appear here...</div>
+</div>
+
+<script>
+function generateUUIDs() {
+  const count = parseInt(document.getElementById('count').value) || 1;
+  const encoding = document.getElementById('encoding').value;
+  const output = [];
+
+  for (let i = 0; i < count; i++) {
+    let rawUUID = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+
+    if (encoding === 'base64') {
+      rawUUID = btoa(rawUUID);
+    } else if (encoding === 'url') {
+      rawUUID = encodeURIComponent(rawUUID).replace(/-/g, '%2D');
+    }
+
+    output.push(rawUUID);
+  }
+
+  document.getElementById('uuidBox').innerText = output.join('\n');
+}
+
+function copyUUIDs() {
+  const text = document.getElementById('uuidBox').innerText.trim();
+  if (!text || text.includes('Your generated UUIDs will appear here')) {
+    alert('Please generate UUIDs first.');
+    return;
+  }
+  navigator.clipboard.writeText(text);
+  alert('UUIDs copied to clipboard!');
+}
+
+function downloadUUIDs() {
+  const text = document.getElementById('uuidBox').innerText.trim();
+  if (!text || text.includes('Your generated UUIDs will appear here')) {
+    alert('Please generate UUIDs first.');
+    return;
+  }
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "uuids.txt";
+  link.click();
+}
+</script>
+
+</body>
+</html>

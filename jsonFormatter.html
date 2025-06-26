@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Formatter | Developer Tools</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #fafdff 0%, #e0f7fa 100%);
+            color: #1a2a32;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .toolbar {
+            width: 100%;
+            background: #222;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .toolbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .toolbar button {
+            background: #00c853;
+            border: none;
+            padding: 0.5rem 1rem;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .container {
+            padding: 1rem;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 1rem;
+            background: #1e1e1e;
+            border: 1px solid #555;
+            color: #fff;
+            font-family: monospace;
+            font-size: 1rem;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        pre {
+            width: 100%;
+            background: #1e1e1e;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid #555;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .json-formatter-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 32px;
+            margin-top: 120px;
+            padding: 32px 0;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .json-box-row {
+            display: flex;
+            flex-direction: row;
+            gap: 32px;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        .json-box {
+            background: #f4fbfa;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(33, 150, 243, 0.10);
+            border: 1px solid #e0f2f1;
+            padding: 0 18px 0 18px;
+            width: 90vw;
+            max-width: 700px;
+            min-width: 260px;
+            min-height: 350px;
+            max-height: 1000px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-sizing: border-box;
+        }
+        .box-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #111;
+            border-top-left-radius: 14px;
+            border-top-right-radius: 14px;
+            padding: 0 12px 0 0;
+            height: 44px;
+            margin-bottom: 8px;
+        }
+        .box-header .box-label {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.08em;
+            margin-left: 18px;
+            letter-spacing: 0.03em;
+        }
+        .box-options {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 0;
+            margin-top: 0;
+            justify-content: flex-end;
+        }
+        .box-options label {
+            cursor: pointer;
+            color: #2196f3;
+            font-size: 1.1em;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            position: relative;
+        }
+        .box-options input[type='file'] {
+            display: none;
+        }
+        .box-options .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3em;
+            color: #2196f3;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .box-options .icon-btn:hover {
+            background: #e0f7fa;
+        }
+        .box-options .icon-btn .tooltip {
+            display: none;
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #222;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            white-space: nowrap;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0.95;
+        }
+        .box-options .icon-btn:hover .tooltip {
+            display: block;
+        }
+        .code-area-wrapper {
+            display: flex;
+            flex: 1 1 auto;
+            min-height: 320px;
+            max-height: 900px;
+            background: #fafdff;
+            border-radius: 8px;
+            border: 1px solid #b2ebf2;
+            overflow: hidden;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+            height: 100%;
+            width: 100%;
+            max-width: 700px;
+            min-width: 260px;
+        }
+        .line-numbers {
+            user-select: none;
+            background: #e0f7fa;
+            color: #90a4ae;
+            text-align: right;
+            padding: 22px 8px 22px 0;
+            font-family: 'Fira Mono', 'Consolas', monospace;
+            font-size: 1.18em;
+            border-right: 1px solid #b2ebf2;
+            min-width: 38px;
+            line-height: 1.5;
+            overflow: hidden;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        .code-scroll {
+            overflow: auto;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            min-width: 0;
+            min-height: 320px;
+            max-height: 900px;
+        }
+        .json-textarea {
+            width: 100%;
+            min-height: 300px;
+            max-height: 900px;
+            height: 100%;
+            resize: none;
+            border: none;
+            outline: none;
+            padding: 16px 16px 16px 0;
+            font-size: 1.08em;
+            font-family: 'Fira Mono', 'Consolas', monospace;
+            background: transparent;
+            color: #1a2a32;
+            box-sizing: border-box;
+            z-index: 2;
+            background: transparent;
+        }
+        .json-textarea[readonly] {
+            background: transparent;
+            color: #388e3c;
+        }
+        .button-panel {
+            display: flex;
+            flex-direction: row;
+            gap: 14px;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0 24px 0;
+            width: 100%;
+        }
+        .button-panel button {
+            min-width: 180px;
+            padding: 16px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.08em;
+            font-weight: 500;
+            background: linear-gradient(90deg, #2196f3 0%, #43e97b 100%);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.07);
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .button-panel button:hover {
+            background: linear-gradient(90deg, #43e97b 0%, #2196f3 100%);
+            box-shadow: 0 4px 16px rgba(67, 233, 123, 0.12);
+        }
+        .json-title {
+            text-align: center;
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #2196f3;
+            margin-top: 90px;
+            margin-bottom: 10px;
+            letter-spacing: 0.03em;
+        }
+        .error-message {
+            color: #d32f2f;
+            background: #fff3f3;
+            border: 1px solid #ffcdd2;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            font-size: 1em;
+            font-weight: 500;
+        }
+        .copied-message {
+            color: #43e97b;
+            background: #e8f6ef;
+            border: 1px solid #b2f7cc;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            font-size: 1em;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+        }
+        .ad-space {
+            height: 120px;
+            margin: 30px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        .popup {
+            position: fixed;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            color: #111;
+            border: 1.5px solid #b2ebf2;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(33, 150, 243, 0.13);
+            padding: 22px 36px 22px 24px;
+            font-size: 1.15em;
+            font-weight: 500;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            min-width: 220px;
+            max-width: 90vw;
+            animation: fadeIn 0.2s;
+        }
+        .popup .close-btn {
+            background: none;
+            border: none;
+            color: #111;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: color 0.2s;
+        }
+        .popup .close-btn:hover {
+            color: #d32f2f;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px) translateX(-50%); }
+            to { opacity: 1; transform: translateY(0) translateX(-50%); }
+        }
+        @media (max-width: 1800px) {
+            .json-formatter-container {
+                max-width: 100vw;
+            }
+            .json-box {
+                width: 60vw;
+                min-width: 320px;
+            }
+        }
+        @media (max-width: 1100px) {
+            .json-formatter-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 24px;
+            }
+            .button-panel {
+                flex-direction: row;
+                gap: 10px;
+                margin: 20px 0;
+                min-width: 0;
+            }
+            .json-box {
+                width: 90vw;
+                min-width: 0;
+                padding: 10px;
+                min-height: 400px;
+            }
+            .json-box textarea {
+                min-height: 200px;
+                padding: 12px;
+                font-size: 1em;
+            }
+        }
+        @media (max-width: 600px) {
+            .json-box {
+                width: 98vw;
+                min-width: 0;
+                padding: 6px;
+            }
+            .button-panel button {
+                width: 100px;
+                font-size: 0.95em;
+                padding: 10px 0;
+            }
+            .json-title {
+                font-size: 1.3em;
+            }
+        }
+        .json-box:fullscreen, .json-box:-webkit-full-screen, .json-box:-ms-fullscreen {
+            width: 100vw !important;
+            max-width: 100vw !important;
+            min-width: 0 !important;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            min-height: 0 !important;
+            position: fixed !important;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 99999;
+            background: #fafdff !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+        .json-box:fullscreen .code-area-wrapper,
+        .json-box:-webkit-full-screen .code-area-wrapper,
+        .json-box:-ms-fullscreen .code-area-wrapper {
+            flex: 1 1 auto;
+            min-height: 0;
+            max-height: none;
+            width: 100vw;
+            max-width: 100vw;
+            min-width: 0;
+            margin-bottom: 0;
+            border-radius: 0;
+            border: none;
+        }
+        .json-box:fullscreen .code-scroll,
+        .json-box:-webkit-full-screen .code-scroll,
+        .json-box:-ms-fullscreen .code-scroll {
+            width: 100vw;
+            height: 100%;
+            min-width: 0;
+            min-height: 0;
+            max-width: 100vw;
+            max-height: 100vh;
+        }
+        .json-box:fullscreen .json-textarea,
+        .json-box:-webkit-full-screen .json-textarea,
+        .json-box:-ms-fullscreen .json-textarea {
+            width: 100vw;
+            height: 100vh;
+            min-height: 0;
+            max-height: none;
+            font-size: 1.2em;
+            padding: 24px;
+            background: #fafdff;
+        }
+        .json-box:fullscreen .box-header,
+        .json-box:-webkit-full-screen .box-header,
+        .json-box:-ms-fullscreen .box-header {
+            border-radius: 0;
+            height: 54px;
+            font-size: 1.2em;
+        }
+        .json-box:fullscreen .box-options .icon-btn,
+        .json-box:-webkit-full-screen .box-options .icon-btn,
+        .json-box:-ms-fullscreen .box-options .icon-btn {
+            font-size: 1.5em;
+        }
+        .json-box:fullscreen .line-numbers,
+        .json-box:-webkit-full-screen .line-numbers,
+        .json-box:-ms-fullscreen .line-numbers {
+            font-size: 1.1em;
+            min-width: 48px;
+            background: #e0f7fa;
+        }
+        .close-fullscreen-btn {
+            position: absolute;
+            top: 10px;
+            right: 18px;
+            z-index: 100000;
+            background: #fff;
+            color: #111;
+            border: 1px solid #b2ebf2;
+            border-radius: 6px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 2px 12px;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.07);
+            display: none;
+        }
+        .json-box:fullscreen .close-fullscreen-btn,
+        .json-box:-webkit-full-screen .close-fullscreen-btn,
+        .json-box:-ms-fullscreen .close-fullscreen-btn {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <img src="images/logo.png" alt="Logo">
+        <a href="index.html">HOME</a>
+        <a href="article.html">ARTICLE</a>
+    </div>
+    <div class="json-formatter-container">
+        <div class="json-title">JSON FORMATTER</div>
+        <div class="button-panel">
+            <button onclick="formatJSON()">Format</button>
+            <button onclick="validateJSON()">Validate</button>
+            <button onclick="beautifyJSON()">Beautify</button>
+            <button onclick="minifyJSON()">Minify</button>
+            <button onclick="copyJSON()">Copy JSON</button>
+            <button onclick="downloadJSON()">Download JSON</button>
+        </div>
+        <div class="json-box-row">
+            <div class="json-box">
+                <div class="box-header">
+                    <span class="box-label">Input</span>
+                    <div class="box-options">
+                        <label title="Upload a file">
+                            <input type="file" accept="application/json" onchange="uploadJSONFile('input', event)">
+                            <span>📁<span class="tooltip">Upload a file</span></span>
+                        </label>
+                        <button class="icon-btn" title="Full Screen" onclick="toggleFullScreen(this)">⛶<span class="tooltip">Full Screen</span></button>
+                        <button class="icon-btn" title="Clear" onclick="clearJSON('input')">🗑️<span class="tooltip">Clear</span></button>
+                    </div>
+                </div>
+                <div class="code-area-wrapper">
+                    <div class="code-scroll" id="inputScroll">
+                        <div class="line-numbers" id="inputLineNumbers"></div>
+                        <textarea class="json-textarea" id="jsonInput" placeholder="Paste or type your JSON here..." oninput="updateInputLineNumbers()" onscroll="syncScroll('input')"></textarea>
+                    </div>
+                </div>
+                <div id="errorMsg" class="error-message" style="display:none;"></div>
+                <button class="close-fullscreen-btn" onclick="exitFullScreen()">✕</button>
+            </div>
+            <div class="json-box">
+                <div class="box-header">
+                    <span class="box-label">Output</span>
+                    <div class="box-options">
+                        <button class="icon-btn" title="Full Screen" onclick="toggleFullScreen(this)">⛶<span class="tooltip">Full Screen</span></button>
+                        <button class="icon-btn" title="Clear" onclick="clearJSON('output')">🗑️<span class="tooltip">Clear</span></button>
+                    </div>
+                </div>
+                <div class="code-area-wrapper">
+                    <div class="code-scroll" id="outputScroll">
+                        <div class="line-numbers" id="outputLineNumbers"></div>
+                        <textarea class="json-textarea" id="jsonOutput" placeholder="Formatted/Beautified JSON will appear here..." readonly oninput="updateOutputLineNumbers()" onscroll="syncScroll('output')"></textarea>
+                    </div>
+                </div>
+                <button class="close-fullscreen-btn" onclick="exitFullScreen()">✕</button>
+            </div>
+        </div>
+        <div id="popupMsg" class="popup" style="display:none;"><span id="popupText"></span><button class="close-btn" onclick="closePopup()">✕</button></div>
+    </div>
+    <script>
+        function showError(msg) {
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.innerText = msg;
+            errorDiv.style.display = 'block';
+        }
+        function clearError() {
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.innerText = '';
+            errorDiv.style.display = 'none';
+        }
+        function showCopied() {
+            const copiedDiv = document.getElementById('copiedMsg');
+            copiedDiv.style.display = 'block';
+            setTimeout(() => { copiedDiv.style.display = 'none'; }, 1500);
+        }
+        function updateInputLineNumbers() {
+            const textarea = document.getElementById('jsonInput');
+            const lineNumbers = document.getElementById('inputLineNumbers');
+            const lines = textarea.value.split('\n').length || 1;
+            let html = '';
+            for (let i = 1; i <= lines; i++) html += i + '<br>';
+            lineNumbers.innerHTML = html;
+        }
+        function updateOutputLineNumbers() {
+            const textarea = document.getElementById('jsonOutput');
+            const lineNumbers = document.getElementById('outputLineNumbers');
+            const lines = textarea.value.split('\n').length || 1;
+            let html = '';
+            for (let i = 1; i <= lines; i++) html += i + '<br>';
+            lineNumbers.innerHTML = html;
+        }
+        function syncScroll(which) {
+            if (which === 'input') {
+                const textarea = document.getElementById('jsonInput');
+                const lineNumbers = document.getElementById('inputLineNumbers');
+                lineNumbers.scrollTop = textarea.scrollTop;
+            } else {
+                const textarea = document.getElementById('jsonOutput');
+                const lineNumbers = document.getElementById('outputLineNumbers');
+                lineNumbers.scrollTop = textarea.scrollTop;
+            }
+        }
+        function formatJSON() {
+            clearError();
+            const input = document.getElementById('jsonInput').value;
+            try {
+                const obj = JSON.parse(input);
+                const formatted = JSON.stringify(obj, null, 2);
+                document.getElementById('jsonOutput').value = formatted;
+                updateOutputLineNumbers();
+            } catch (e) {
+                showError('Invalid JSON: ' + e.message);
+                document.getElementById('jsonOutput').value = '';
+                updateOutputLineNumbers();
+            }
+        }
+        function validateJSON() {
+            clearError();
+            const input = document.getElementById('jsonInput').value;
+            try {
+                JSON.parse(input);
+                showPopup('Valid JSON');
+            } catch (e) {
+                showPopup('Invalid JSON');
+            }
+        }
+        function beautifyJSON() {
+            clearError();
+            const input = document.getElementById('jsonInput').value;
+            try {
+                const obj = JSON.parse(input);
+                const beautified = JSON.stringify(obj, null, 4);
+                document.getElementById('jsonOutput').value = beautified;
+                updateOutputLineNumbers();
+            } catch (e) {
+                showError('Invalid JSON: ' + e.message);
+                document.getElementById('jsonOutput').value = '';
+                updateOutputLineNumbers();
+            }
+        }
+        function minifyJSON() {
+            clearError();
+            const input = document.getElementById('jsonInput').value;
+            try {
+                const obj = JSON.parse(input);
+                const minified = JSON.stringify(obj);
+                document.getElementById('jsonOutput').value = minified;
+                updateOutputLineNumbers();
+            } catch (e) {
+                showError('Invalid JSON: ' + e.message);
+                document.getElementById('jsonOutput').value = '';
+                updateOutputLineNumbers();
+            }
+        }
+        function copyJSON() {
+            const output = document.getElementById('jsonOutput').value;
+            if (!output) return;
+            navigator.clipboard.writeText(output);
+            showPopup('Copied to clipboard!');
+        }
+        function downloadJSON() {
+            const output = document.getElementById('jsonOutput').value;
+            if (!output) return;
+            const blob = new Blob([output], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'formatted.json';
+            link.click();
+        }
+        function showPopup(msg) {
+            const popup = document.getElementById('popupMsg');
+            document.getElementById('popupText').innerText = msg;
+            popup.style.display = 'flex';
+        }
+        function closePopup() {
+            document.getElementById('popupMsg').style.display = 'none';
+        }
+        function uploadJSONFile(which, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const json = JSON.parse(e.target.result);
+                    const text = JSON.stringify(json, null, 2);
+                    if (which === 'input') {
+                        document.getElementById('jsonInput').value = text;
+                        updateInputLineNumbers();
+                    } else {
+                        document.getElementById('jsonOutput').value = text;
+                        updateOutputLineNumbers();
+                    }
+                } catch (err) {
+                    showPopup('Invalid JSON file');
+                }
+            };
+            reader.readAsText(file);
+        }
+        function clearJSON(which) {
+            if (which === 'input') {
+                document.getElementById('jsonInput').value = '';
+                updateInputLineNumbers();
+            } else {
+                document.getElementById('jsonOutput').value = '';
+                updateOutputLineNumbers();
+            }
+        }
+        function toggleFullScreen(btn) {
+            const box = btn.closest('.json-box');
+            if (!document.fullscreenElement) {
+                if (box.requestFullscreen) box.requestFullscreen();
+                else if (box.webkitRequestFullscreen) box.webkitRequestFullscreen();
+                else if (box.msRequestFullscreen) box.msRequestFullscreen();
+            } else {
+                exitFullScreen();
+            }
+        }
+        function exitFullScreen() {
+            if (document.exitFullscreen) document.exitFullscreen();
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            else if (document.msExitFullscreen) document.msExitFullscreen();
+        }
+        // Update line numbers on load
+        window.onload = function() {
+            updateInputLineNumbers();
+            updateOutputLineNumbers();
+        };
+        // Also update output line numbers when user pastes or types in output (for completeness)
+        document.getElementById('jsonOutput').addEventListener('input', updateOutputLineNumbers);
+        // Update input line numbers on input
+        document.getElementById('jsonInput').addEventListener('input', updateInputLineNumbers);
+    </script>
+</body>
+</html>

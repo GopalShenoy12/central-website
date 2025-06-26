@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Main Home Page</title>
+<link rel="stylesheet" href="common.css">
+<style>
+body {
+  background: linear-gradient(135deg, #fafdff 0%, #e8f6ef 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.section-container {
+  display: flex;
+  gap: 40px;
+  margin-top: 140px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.section-card {
+  background: linear-gradient(120deg, #e3f6fc 0%, #e8f6ef 100%);
+  border-radius: 18px;
+  padding: 36px;
+  width: 250px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.10);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  border: 1px solid #e0f2f1;
+}
+
+.section-card:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(67, 233, 123, 0.18);
+  background: linear-gradient(120deg, #e8f6ef 0%, #e3f6fc 100%);
+}
+
+.section-card h2 {
+  color: #2196f3;
+  margin-bottom: 10px;
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+.section-card p {
+  color: #43e97b;
+  font-size: 1.08em;
+}
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR: remains as per your working common.css -->
+<div class="navbar">
+  <img src="images/logo.png" alt="Logo">
+  <a href="index.html">HOME</a>
+  <a href="article.html">ARTICLE</a>
+</div>
+
+<!-- SECTION CARDS FOR UUID & WCC -->
+<div class="section-container">
+  <div class="section-card" style="background: linear-gradient(120deg, #e3f6fc 0%, #b3c6f9 100%); box-shadow: 0 4px 16px rgba(33, 150, 243, 0.10); border: 1px solid #b3c6f9;" onclick="location.href='uuid.html'">
+    <h2 style="color: #2196f3;">Generators</h2>
+    <p style="color: #1976d2;">UUID v4 Generator</p>
+  </div>
+
+  <div class="section-card" style="background: linear-gradient(120deg, #e8f6ef 0%, #b2f7cc 100%); box-shadow: 0 4px 16px rgba(67, 233, 123, 0.10); border: 1px solid #b2f7cc;" onclick="location.href='wcc.html'">
+    <h2 style="color: #43e97b;">Text Utilities</h2>
+    <p style="color: #388e3c;">Word & Character Counter</p>
+  </div>
+
+  <div class="section-card" style="background: linear-gradient(120deg, #e0f7fa 0%, #80deea 100%); box-shadow: 0 4px 16px rgba(0, 188, 212, 0.10); border: 1px solid #80deea;" onclick="location.href='jsonFormatter.html'">
+    <h2 style="color: #00bcd4;">JSON Formatter</h2>
+    <p style="color: #00838f;">Format & Beautify JSON</p>
+  </div>
+</div>
+
+</body>
+</html>
