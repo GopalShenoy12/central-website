@@ -1,6 +1,6 @@
 backend:
-  name: git-gateway
-  repo: Anshenoy08/central-website
+  name: github
+  repo: Anushenoy08/central-website
   branch: main
 
 auth:
@@ -19,4 +19,5 @@ collections:
     slug: "{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
       - { label: "Body", name: "body", widget: "markdown" }
