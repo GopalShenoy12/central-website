@@ -1,16 +1,15 @@
 backend:
   name: git-gateway
+  repo: Anshenoy08/central-website
   branch: main
-
-local_backend: true
-
-media_folder: "static/img"
-public_folder: "/img"
 
 auth:
   backend: auth0
   auth0_domain: dev-rn6gx2bgqickricv.us.auth0.com
   client_id: SOHD1g0W5s9ANgto2y6QcCmzL97eJN4Y
+
+media_folder: "static/img"
+public_folder: "/img"
 
 collections:
   - name: "blog"
