@@ -1,0 +1,23 @@
+backend:
+  name: github
+  repo: Anushenoy08/central-website
+  branch: main
+
+auth:
+  backend: auth0
+  auth0_domain: dev-rn6gx2bgqickricv.us.auth0.com
+  client_id: SOHD1g0W5s9ANgto2y6QcCmzL97eJN4Y
+
+media_folder: "static/img"
+public_folder: "/img"
+
+collections:
+  - name: "blog"
+    label: "Blog"
+    folder: "content/blog"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Body", name: "body", widget: "markdown" }
