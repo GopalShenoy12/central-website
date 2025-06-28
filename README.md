@@ -1,6 +1,6 @@
 # Central Website - Dark Theme
 
-A modern website with dark theme featuring various developer tools and a content management system.
+A modern website with dark theme featuring various developer tools.
 
 ## Features
 
@@ -9,43 +9,20 @@ A modern website with dark theme featuring various developer tools and a content
   - UUID Generator
   - Word & Character Counter
   - JSON Formatter
-- 📝 **Content Management**: Decap CMS integration
 - 📱 **Responsive Design**: Works on all devices
 - ⚡ **Fast Loading**: Optimized assets and caching
 
 ## Pages
 
 - **Home** (`index.html`): Main landing page with tool cards
-- **Blog** (`blog.html`): Blog posts from CMS
-- **UUID Generator** (`uuid.html`): Generate UUIDs with encoding options
-- **Word Counter** (`wcc.html`): Count words, characters, and search text
-- **JSON Formatter** (`jsonFormatter.html`): Format and beautify JSON
-- **Admin** (`admin/`): Content management interface
+- **UUID Generator** (`tools/uuid.html`): Generate UUIDs with encoding options
+- **Word Counter** (`tools/wcc.html`): Count words, characters, and search text
+- **JSON Formatter** (`tools/jsonFormatter.html`): Format and beautify JSON
+- **Article** (`pages/article.html`): Sample article page
 
 ## Hosting Options
 
-### Option 1: Netlify (Recommended)
-
-1. **Connect to GitHub**:
-   - Go to [netlify.com](https://netlify.com)
-   - Sign up/login with your GitHub account
-   - Click "New site from Git"
-   - Select your repository: `Anushenoy08/central-website`
-
-2. **Configure Build Settings**:
-   - Build command: (leave empty)
-   - Publish directory: `.` (root directory)
-
-3. **Deploy**:
-   - Click "Deploy site"
-   - Your site will be live at `https://your-site-name.netlify.app`
-
-4. **Setup CMS**:
-   - Go to `https://your-site-name.netlify.app/admin`
-   - Authorize with GitHub
-   - Start creating blog posts!
-
-### Option 2: GitHub Pages
+### Option 1: GitHub Pages (Recommended)
 
 1. **Enable GitHub Pages**:
    - Go to your repository settings
@@ -55,43 +32,29 @@ A modern website with dark theme featuring various developer tools and a content
    - Save
 
 2. **Your site will be live at**:
-   `https://anushenoy08.github.io/central-website`
+   `https://gopalshenoy12.github.io/central-website`
 
-### Option 3: Vercel
+### Option 2: Vercel
 
 1. **Deploy to Vercel**:
    - Go to [vercel.com](https://vercel.com)
    - Import your GitHub repository
    - Deploy automatically
 
-## CMS Setup
+### Option 3: Any Static Hosting
 
-The website uses **Decap CMS** (formerly Netlify CMS) for content management:
-
-### Accessing the CMS
-- Navigate to `/admin` on your deployed site
-- Authorize with GitHub
-- Start creating and editing content
-
-### Content Structure
-- **Blog Posts**: Stored in `/posts` directory
-- **Images**: Uploaded to `/images/uploads`
-- **Configuration**: `admin/config.yml`
-
-### Creating Blog Posts
-1. Go to `/admin`
-2. Click "New Blog"
-3. Fill in:
-   - Title
-   - Date
-   - Body (Markdown supported)
-4. Click "Publish"
+Since this is a static website, you can host it on any platform:
+- **Firebase Hosting**
+- **AWS S3 + CloudFront**
+- **Cloudflare Pages**
+- **Surge.sh**
+- **Any web server**
 
 ## Local Development
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/Anushenoy08/central-website.git
+   git clone https://github.com/GopalShenoy12/central-website.git
    cd central-website
    ```
 
@@ -113,29 +76,29 @@ The dark theme uses these color variables:
 - Accent: `#64b5f6`, `#4fc3f7`
 
 ### Adding New Tools
-1. Create a new HTML file
-2. Include `common.css`
+1. Create a new HTML file in the `tools/` directory
+2. Include `../assets/css/common.css`
 3. Use the dark theme color scheme
-4. Add navigation link
+4. Add navigation link to `index.html`
 
 ## File Structure
 
 ```
 central-website/
-├── index.html              # Home page
-├── blog.html               # Blog page
-├── uuid.html               # UUID Generator
-├── wcc.html                # Word Counter
-├── jsonFormatter.html      # JSON Formatter
-├── article.html            # Article page
-├── common.css              # Shared styles
-├── admin/
-│   ├── index.html          # CMS interface
-│   └── config.yml          # CMS configuration
-├── posts/                  # Blog posts (CMS)
-├── images/                 # Images and uploads
-├── netlify.toml           # Netlify configuration
-└── README.md              # This file
+├── index.html                    # Home page
+├── assets/
+│   ├── css/
+│   │   └── common.css            # Shared styles
+│   ├── images/
+│   │   └── logo.png              # Logo image
+│   └── favicon.ico               # Favicon
+├── tools/
+│   ├── uuid.html                 # UUID Generator
+│   ├── wcc.html                  # Word Counter
+│   └── jsonFormatter.html        # JSON Formatter
+├── pages/
+│   └── article.html              # Article page
+└── README.md                     # This file
 ```
 
 ## Contributing
