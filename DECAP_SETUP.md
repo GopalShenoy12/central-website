@@ -38,9 +38,26 @@ Decap CMS is a Git-based content management system that allows you to edit conte
 Update `admin/config.yml` with your actual GitHub OAuth Client ID:
 
 ```yaml
-auth:
-  client_id: YOUR_GITHUB_CLIENT_ID_HERE
-  redirect_uri: https://your-site-name.netlify.app/callback
+backend:
+  name: github
+  repo: GopalShenoy12/central-website
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
 ```
 
 ### 4. Deploy
