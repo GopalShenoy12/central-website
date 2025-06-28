@@ -1,12 +1,12 @@
 backend:
   name: github
-  repo: Anushenoy08/central-website
+  repo: GopalShenoy12/central-website
   branch: main
   auth_endpoint: auth
 
 auth:
-  client_id: Ov23liEnkW3GSXkNggR2
-  redirect_uri: https://central-website.netlify.app/callback
+  client_id: Ov23liOh7F1nzW1Tph5Y
+  redirect_uri: https://marvelous-babka-e89623.netlify.app/admin
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
