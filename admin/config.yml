@@ -2,6 +2,7 @@ backend:
   name: github
   repo: Anushenoy08/central-website
   branch: main
+  auth_endpoint: auth
 
 auth:
   client_id: Ov23liEnkW3GSXkNggR2
@@ -12,11 +13,13 @@ public_folder: "/images/uploads"
 
 collections:
   - name: "blog"
-    label: "Blog"
+    label: "Blog Posts"
     folder: "posts"
     create: true
-    slug: "{{slug}}"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime" }
       - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false }

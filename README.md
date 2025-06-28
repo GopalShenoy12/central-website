@@ -9,7 +9,7 @@ A modern website with dark theme featuring various developer tools and a content
   - UUID Generator
   - Word & Character Counter
   - JSON Formatter
-- 📝 **Content Management**: Netlify CMS integration
+- 📝 **Content Management**: Decap CMS integration
 - 📱 **Responsive Design**: Works on all devices
 - ⚡ **Fast Loading**: Optimized assets and caching
 
@@ -66,7 +66,7 @@ A modern website with dark theme featuring various developer tools and a content
 
 ## CMS Setup
 
-The website uses **Netlify CMS** for content management:
+The website uses **Decap CMS** (formerly Netlify CMS) for content management:
 
 ### Accessing the CMS
 - Navigate to `/admin` on your deployed site

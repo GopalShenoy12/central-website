@@ -1,0 +1,25 @@
+{
+  "name": "central-website",
+  "version": "1.0.0",
+  "description": "A modern website with dark theme and Decap CMS",
+  "main": "index.html",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build step required'"
+  },
+  "dependencies": {
+    "@octokit/rest": "^19.0.13"
+  },
+  "devDependencies": {
+    "netlify-cli": "^15.0.0"
+  },
+  "keywords": [
+    "website",
+    "cms",
+    "decap-cms",
+    "dark-theme",
+    "developer-tools"
+  ],
+  "author": "Gopalakrishna Shenoy",
+  "license": "MIT"
+} 
